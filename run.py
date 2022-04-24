@@ -6,6 +6,7 @@ from randomSameValuation import RandomSameValuation
 import randomValuation
 import dubinsSpanier
 from valuationInterface import ValuationInterface
+import numpy as np
 
 def getCost(v: ValuationInterface, a, n):
     cost = 0
@@ -20,104 +21,121 @@ def runRandomValuationSimulation(totalIterations: int, n: int, p:float):
     totalSuccess = 0
     totalFailure = 0
     totalCost = 0
+    allCosts = []
     for i in range(totalIterations):
         v = randomValuation.RandomValuation(n, p)
         d = dubinsSpanier.DubinsSpanier()
         a = d.runAlg(v, n) 
         cost = getCost(v, a, n) 
+        allCosts.append(cost)
         if cost == 0:
             totalSuccess += 1
         else:
             totalFailure += 1
             totalCost += cost
-    return (totalSuccess, totalFailure, totalCost/totalIterations)
+    return (totalSuccess, totalFailure, totalCost/totalIterations, np.var(allCosts))
 
 
 def runRandomSameValuationSimulation(totalIterations: int, n: int, p: float):
     totalSuccess = 0
     totalFailure = 0
     totalCost = 0
+    allCosts = []
+
     for i in range(totalIterations):
         v = RandomSameValuation(n, p)
         d = dubinsSpanier.DubinsSpanier()
         a = d.runAlg(v, n) 
         cost = getCost(v, a, n) 
+        allCosts.append(cost)
         if cost == 0:
             totalSuccess += 1
         else:
             totalFailure += 1
             totalCost += cost
 
-    return (totalSuccess, totalFailure, totalCost/totalIterations)
+    return (totalSuccess, totalFailure, totalCost/totalIterations, np.var(allCosts))
 
 def runRandomLinearDensityValuationSimulation(totalIterations: int, n: int, p: float):
     totalSuccess = 0
     totalFailure = 0
     totalCost = 0
+    allCosts = []
+
     for i in range(totalIterations):
         v = LinearDensityValuation(n, p)
         d = dubinsSpanier.DubinsSpanier()
         a = d.runAlg(v, n) 
         cost = getCost(v, a, n) 
+        allCosts.append(cost)
         if cost == 0:
             totalSuccess += 1
         else:
             totalFailure += 1
             totalCost += cost
 
-    return (totalSuccess, totalFailure, totalCost/totalIterations)
+    return (totalSuccess, totalFailure, totalCost/totalIterations,np.var(allCosts))
 
 
 def runRandomLinearDensityValuationSimulationEvan(totalIterations: int, n: int, p: float):
     totalSuccess = 0
     totalFailure = 0
     totalCost = 0
+    allCosts = []
+
     for i in range(totalIterations):
         v = LinearDensityValuation(n, p)
         d = EvanPaz()
         a = d.runAlg(v, n) 
         cost = getCost(v, a, n) 
+        allCosts.append(cost)
         if cost == 0:
             totalSuccess += 1
         else:
             totalFailure += 1
             totalCost += cost
 
-    return (totalSuccess, totalFailure, totalCost/totalIterations)
+    return (totalSuccess, totalFailure, totalCost/totalIterations, np.var(allCosts))
 
 def runRandomValuationSimulationEvan(totalIterations: int, n: int, p:float):
     totalSuccess = 0
     totalFailure = 0
     totalCost = 0
+    allCosts = []
+
     for i in range(totalIterations):
         v = randomValuation.RandomValuation(n, p)
         d = EvanPaz()
         a = d.runAlg(v, n) 
         cost = getCost(v, a, n) 
+        allCosts.append(cost)
         if cost == 0:
             totalSuccess += 1
         else:
             totalFailure += 1
             totalCost += cost
-    return (totalSuccess, totalFailure, totalCost/totalIterations)
+    return (totalSuccess, totalFailure, totalCost/totalIterations, np.var(allCosts))
 
 
 def runRandomSameValuationSimulationEvan(totalIterations: int, n: int, p: float):
     totalSuccess = 0
     totalFailure = 0
     totalCost = 0
+    allCosts = []
     for i in range(totalIterations):
         v = RandomSameValuation(n, p)
         d = EvanPaz()
         a = d.runAlg(v, n) 
         cost = getCost(v, a, n) 
+        allCosts.append(cost)
         if cost == 0:
             totalSuccess += 1
         else:
             totalFailure += 1
             totalCost += cost
 
-    return (totalSuccess, totalFailure, totalCost/totalIterations)
+    return (totalSuccess, totalFailure, totalCost/totalIterations, np.var(allCosts))
+
     
 
 
