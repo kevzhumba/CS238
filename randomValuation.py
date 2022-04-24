@@ -42,15 +42,19 @@ class RandomValuation(ValuationInterface):
             if (lower == startingInterval[0]):
                 interval2val = playerNoisyMap[startingInterval]
             interval3val = cutVal - betweenIntervalVal - interval2val
+            if (upper == endingInterval[1]):
+                interval3val = playerNoisyMap[endingInterval]
+                interval2val = cutVal - betweenIntervalVal - interval3val
             interval1val = playerNoisyMap[startingInterval] - interval2val
             interval4val = playerNoisyMap[endingInterval] - interval3val
             playerNoisyMap.pop(startingInterval, None)
             playerNoisyMap.pop(endingInterval, None)
             if (lower != startingInterval[0]):
                 playerNoisyMap[interval1] = interval1val
+            if (upper != endingInterval[1]):
+                playerNoisyMap[interval4] = interval4val 
             playerNoisyMap[interval2] = interval2val
             playerNoisyMap[interval3] = interval3val
-            playerNoisyMap[interval4] = interval4val 
         return playerNoisyMap
 
     def noisyEval(self, i: int, lower: float, upper: float) -> float:  
@@ -59,7 +63,7 @@ class RandomValuation(ValuationInterface):
         endingInterval = (0,1) 
         if (lower == upper or lower == 1):
             return 0
-        
+
         for (l,u) in playerNoisyMap.keys():
             #find the interval for lower, if lower is at the edge it is correct to take the upper interval
             if (l <= lower and u > lower):
@@ -70,13 +74,20 @@ class RandomValuation(ValuationInterface):
 
         currInterval = startingInterval
         totalVal = playerNoisyMap[startingInterval]
+        a = False
         while (currInterval != endingInterval):
             #search for the "next" interval
             for (l,u) in playerNoisyMap.keys():
+                a = True
+                if (currInterval[0] == currInterval[1]):
+                    raise Exception("die")
                 if (currInterval[1] == l):
+                    a = False
                     currInterval = (l,u)
                     totalVal += playerNoisyMap[(l,u)]
                     break
+            if a:
+                raise Exception("die")
 
         if (lower == startingInterval[0] and upper == endingInterval[1]):
             return totalVal
@@ -89,7 +100,6 @@ class RandomValuation(ValuationInterface):
         else: 
             #max handles the case of starting and ending being the same (in that case, min poll value is 0)
             evalReturn = np.random.uniform(max(totalVal - playerNoisyMap[startingInterval] - playerNoisyMap[endingInterval], 0), totalVal)
-
         self.noisyMap[i] = self.chooseNewValsForAdjacentIntervals(playerNoisyMap, startingInterval, endingInterval, totalVal, lower, upper, evalReturn)
         return evalReturn
 
@@ -103,6 +113,7 @@ class RandomValuation(ValuationInterface):
             else:
                 return 1
         playerNoisyMap = self.noisyMap[i]
+
         startingInterval = (0,1)
         for (l,u) in playerNoisyMap.keys():
             #find the interval where lower begins
@@ -115,18 +126,13 @@ class RandomValuation(ValuationInterface):
         #at the end of the loop, this will hold the end interval
         currInterval = startingInterval
         a = False
-        while (totalVal <= cutVal):
+        while ((lower != startingInterval[0] and totalVal <= cutVal) or totalVal < cutVal):
             #find the partition that is the next interval
             if (currInterval[1] == 1):
                 return -1
             for (l1,u1) in playerNoisyMap.keys():
                 a = True
                 if (currInterval[0] == currInterval[1] or l1 == u1):
-                    print(currInterval[0])
-                    print(currInterval[1])
-                    print(l1)
-                    print(u1)
-                    print(playerNoisyMap)
                     raise Exception("die")
                 if (l1 == currInterval[1]):
                     a = False
@@ -137,7 +143,7 @@ class RandomValuation(ValuationInterface):
                 raise Exception("die")
         #if the total value is the cut value and lower is equal to startingInterval[0], then we just return (startingInterval[0], currInterval[1])
         if (totalVal == cutVal and lower == startingInterval[0]):
-            return (lower, currInterval[1])
+            return currInterval[1]
 
         #otherwise, at this point, we want to poll for a point in currInterval
         cutPoint = np.random.uniform(low = currInterval[0], high = currInterval[1])

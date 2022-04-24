@@ -1,5 +1,7 @@
 from cmath import cos
+from EvanPaz import EvanPaz
 from algorithm import Algorithm
+from linearDensityValuation import LinearDensityValuation
 from randomSameValuation import RandomSameValuation
 import randomValuation
 import dubinsSpanier
@@ -48,8 +50,94 @@ def runRandomSameValuationSimulation(totalIterations: int, n: int, p: float):
 
     return (totalSuccess, totalFailure, totalCost/totalIterations)
 
-#print(runRandomSameValuationSimulation(100000, 10, 0.002)) TODO this is broken because of floating point rounding
-print(runRandomValuationSimulation(10000, 10, 0.01))
+def runRandomLinearDensityValuationSimulation(totalIterations: int, n: int, p: float):
+    totalSuccess = 0
+    totalFailure = 0
+    totalCost = 0
+    for i in range(totalIterations):
+        v = LinearDensityValuation(n, p)
+        d = dubinsSpanier.DubinsSpanier()
+        a = d.runAlg(v, n) 
+        cost = getCost(v, a, n) 
+        if cost == 0:
+            totalSuccess += 1
+        else:
+            totalFailure += 1
+            totalCost += cost
+
+    return (totalSuccess, totalFailure, totalCost/totalIterations)
+
+
+def runRandomLinearDensityValuationSimulationEvan(totalIterations: int, n: int, p: float):
+    totalSuccess = 0
+    totalFailure = 0
+    totalCost = 0
+    for i in range(totalIterations):
+        v = LinearDensityValuation(n, p)
+        d = EvanPaz()
+        a = d.runAlg(v, n) 
+        cost = getCost(v, a, n) 
+        if cost == 0:
+            totalSuccess += 1
+        else:
+            totalFailure += 1
+            totalCost += cost
+
+    return (totalSuccess, totalFailure, totalCost/totalIterations)
+
+def runRandomValuationSimulationEvan(totalIterations: int, n: int, p:float):
+    totalSuccess = 0
+    totalFailure = 0
+    totalCost = 0
+    for i in range(totalIterations):
+        v = randomValuation.RandomValuation(n, p)
+        d = EvanPaz()
+        a = d.runAlg(v, n) 
+        cost = getCost(v, a, n) 
+        if cost == 0:
+            totalSuccess += 1
+        else:
+            totalFailure += 1
+            totalCost += cost
+    return (totalSuccess, totalFailure, totalCost/totalIterations)
+
+
+def runRandomSameValuationSimulationEvan(totalIterations: int, n: int, p: float):
+    totalSuccess = 0
+    totalFailure = 0
+    totalCost = 0
+    for i in range(totalIterations):
+        v = RandomSameValuation(n, p)
+        d = EvanPaz()
+        a = d.runAlg(v, n) 
+        cost = getCost(v, a, n) 
+        if cost == 0:
+            totalSuccess += 1
+        else:
+            totalFailure += 1
+            totalCost += cost
+
+    return (totalSuccess, totalFailure, totalCost/totalIterations)
+    
+
+
+print("Random Linear Dubins")
+print(runRandomLinearDensityValuationSimulation(10000, 8, 0.01))
+print("Random Same Dubins")
+
+print(runRandomSameValuationSimulation(10000, 8, 0.01)) 
+print("Random Dubins")
+
+print(runRandomValuationSimulation(10000, 8, 0.01))
+print("Random Evans")
+
+print(runRandomValuationSimulationEvan(10000, 8, 0.01))
+print("Random Linear Evans")
+
+print(runRandomLinearDensityValuationSimulationEvan(10000, 8, 0.01))
+print("Random Same Evans")
+
+print(runRandomSameValuationSimulationEvan(10000, 8, 0.01))
 
     
 

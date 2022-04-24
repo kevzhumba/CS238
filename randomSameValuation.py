@@ -10,7 +10,7 @@ class RandomSameValuation(ValuationInterface):
         return self.v.noisyCut(0, lower, cutVal)
     
     def noisyEval(self, i: int, lower: float, upper: float) -> float:
-        return self.v.noisyCut(0, lower, upper)
+        return self.v.noisyEval(0, lower, upper)
      
     def getRealValueForAllocation(self, i: int, lower: float, upper: float) -> float:
         return self.v.getRealValueForAllocation(0, lower, upper)

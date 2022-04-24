@@ -1,4 +1,7 @@
-class DubinsSpanier:    
+from algorithm import Algorithm
+
+
+class DubinsSpanier(Algorithm):    
     def runAlg(self, valuations, n):
         worklist = set()
         allocations = []
@@ -11,6 +14,8 @@ class DubinsSpanier:
             earliestCut = 2
             for i in worklist:
                 cutForI = valuations.noisyCut(i, latestCut, 1/n)
+                if (cutForI < 0):
+                    raise Exception("die")
                 if (cutForI < earliestCut):
                     earliestPlayer = i
                     earliestCut = cutForI
