@@ -32,3 +32,8 @@ class LinearDensityValuation(ValuationInterface):
     delta = 1/((1+self.p)-x*(2*self.p))
     return noisyVal * delta
 
+  def getRealValueForValuation(self, i: int, val: float) -> float:
+      x = np.random.uniform(0, 1)
+      delta = 1/((1+self.p)-x*(2*self.p))
+      return val * delta
+

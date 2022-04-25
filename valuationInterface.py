@@ -7,3 +7,6 @@ class ValuationInterface:
 
     def getRealValueForAllocation(self, i: int, lower: float, upper: float) -> float:
         pass
+    
+    def getRealValueForValuation(self, i: int, val: float) -> float:
+        pass

@@ -14,4 +14,9 @@ class RandomSameValuation(ValuationInterface):
      
     def getRealValueForAllocation(self, i: int, lower: float, upper: float) -> float:
         return self.v.getRealValueForAllocation(0, lower, upper)
+
+    def getRealValueForValuation(self, i: int, val: float) -> float:
+        return self.v.getRealValueForValuation(i, val)
+    
+
     
